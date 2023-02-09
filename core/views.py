@@ -1,6 +1,6 @@
 from .models import Book, Status
 from rest_framework import generics, permissions
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from .serializers import BookSerializer, StatusSerializer, FeaturedSerializer
@@ -24,7 +24,7 @@ class BookView(generics.RetrieveUpdateDestroyAPIView):
 class StatusView(generics.ListAPIView):
     queryset = Status.objects.all()
     serializer = StatusSerializer()
-    permissions = permissions.IsOwnerOrReadOnly
+    permissions = permissions.IsAuthenticatedOrReadOnly
 
     def create(self, serializer):
         serializer.save(user=self.request.user)
@@ -34,5 +34,5 @@ class StatusView(generics.ListAPIView):
         return queryset
 
 class FeaturedView(generics.ListAPIView):
-    queryset = Book.objects.filter(feature=True)
+    queryset = Book.objects.filter()
     serializer = FeaturedSerializer
